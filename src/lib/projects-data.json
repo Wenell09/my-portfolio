@@ -1,0 +1,58 @@
+{
+  "projects": [
+    {
+      "id": "TalentForce",
+      "title": "TalentForce App",
+      "description": "Aplikasi internal perusahaan untuk karyawan dan freelance dalam mencatat logbook kerja serta mengelola pengajuan izin cuti, lengkap dengan riwayat dan status persetujuan.",
+      "imageUrl": "/projects/talentforce.png",
+      "imageHint": "TalentForce App",
+      "tags": ["Flutter", "Bloc", "Clean Architecture"],
+      "playstoreUrl": "https://play.google.com/store/apps/details?id=tech.indi.talentforce"
+    },
+    {
+      "id": "Nellicious",
+      "title": "Nellicious App",
+      "description": "Aplikasi pemesanan makanan dan minuman dengan fitur pencarian produk, favorit, review & rating, serta keranjang belanja dan pembayaran.",
+      "imageUrl": "/projects/nellicious.png",
+      "imageHint": "Nellicious App",
+      "tags": ["Flutter"],
+      "githubUrl": "https://github.com/Wenell09/flutter-nellicious"
+    },
+    {
+      "id": "Marinabung",
+      "title": "MariNabung App",
+      "description": "Aplikasi manajemen tabungan yang membantu pengguna merencanakan, memantau, dan menyelesaikan target menabung secara terstruktur.",
+      "imageUrl": "/projects/marinabung.png",
+      "imageHint": "MariNabung App",
+      "tags": ["Flutter", "Bloc"],  
+      "githubUrl": "https://github.com/Wenell09/flutter-marinabung"
+    },
+     {
+      "id": "Necomic",
+      "title": "Necomic App",
+      "description": "Aplikasi eksplorasi komik berbasis API Jikan dengan fitur pencarian, favorit, review & rating, serta dukungan light dan dark mode.",
+      "imageUrl": "/projects/necomic.png",
+      "imageHint": "Necomic",
+      "tags": ["Flutter", "Bloc"],  
+      "githubUrl": "https://github.com/Wenell09/flutter-necomic"
+    },
+     {
+      "id": "Nelshop",
+      "title": "Nelshop App",
+      "description": "Aplikasi e-commerce elektronik dengan fitur pencarian produk, detail spesifikasi, favorit, keranjang belanja, serta proses checkout.",
+      "imageUrl": "/projects/nelshop.png",
+      "imageHint": "Nelshop",
+      "tags": ["Flutter", "GetX"],  
+      "githubUrl": "https://github.com/Wenell09/flutter-nelshop"
+    },
+      {
+      "id": "Sukanime",
+      "title": "Sukanime App",
+      "description": "Aplikasi informasi anime berbasis API Jikan dengan fitur pencarian, favorit, review & rating, serta mode terang dan gelap.",
+      "imageUrl": "/projects/sukanime.png",
+      "imageHint": "Sukanime",
+      "tags": ["Flutter", "GetX"],  
+      "githubUrl": "https://github.com/Wenell09/flutter-sukanime"
+    }
+  ]
+}

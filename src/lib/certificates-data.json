@@ -1,0 +1,60 @@
+{
+  "certificates": [
+    {
+      "id": "mber-1",
+      "title": "Mobile App Developer - Magang Berdampak",
+      "fileUrl": "/certificates/INT250247-Nabil-Al-Faatir.pptx.pdf",
+            "imageUrl" : "/certificates/Screenshot01.png",
+      "tags": ["Flutter", "Mobile App Developer", "Magang Berdampak"]
+    },
+    {
+      "id": "mber-2",
+      "title": "Kepersetaan Magang Berdampak",
+      "fileUrl": "/certificates/kepersetaan_mber.pdf",
+           "imageUrl" : "/certificates/Screenshot02.png",
+      "tags": ["Magang Berdampak"]
+    },
+     {
+      "id": "dicoding-1",
+      "title": "Dicoding Dart",
+      "fileUrl": "/certificates/serti_dicoding_dart.pdf",
+           "imageUrl" : "/certificates/Screenshot03.png",
+      "tags": ["Dart"]
+    },
+     {
+      "id": "dicoding-2",
+      "title": "Dicoding Flutter Basic",
+      "fileUrl": "/certificates/serti_dicoding_flutter_basic.pdf",
+      "imageUrl" : "/certificates/Screenshot04.png",
+      "tags": ["Flutter"]
+    },
+     {
+      "id": "dicoding-3",
+      "title": "Dicoding Flutter Intermediate",
+      "fileUrl": "/certificates/serti_dicoding_flutter_intermediate.pdf",
+      "imageUrl" : "/certificates/Screenshot05.png",
+      "tags": ["Flutter"]
+    },
+     {
+      "id": "idcamp",
+      "title": "IDCamp Flutter 2023",
+      "fileUrl": "/certificates/serti_idcamp_flutter.pdf",
+    "imageUrl" : "/certificates/Screenshot07.png",
+      "tags": ["Flutter"]
+    },
+     {
+      "id": "sanbercode",
+      "title": "Bootcamp Flutter Sanbercode",
+      "fileUrl": "/certificates/serti_flutter_sanbercode.pdf",
+        "imageUrl" : "/certificates/Screenshot06.png",
+      "tags": ["Flutter"]
+    },
+      {
+      "id": "netacad",
+      "title": "Python Netacad",
+      "fileUrl": "/certificates/serti_python_netacad.pdf",
+     "imageUrl" : "/certificates/Screenshot08.png",
+      "tags": ["Python"]
+    }
+  ]
+}

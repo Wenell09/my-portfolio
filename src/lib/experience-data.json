@@ -1,0 +1,14 @@
+{
+  "experiences": [
+    {
+      "id": "exp-a",
+      "company": "PT Indi Teknokreasi Internasional",
+      "role": "Mobile App Developer",
+      "period": "04 Agustus - 20 Desember 2025",
+      "description": "Merancang, mengembangkan, dan menguji aplikasi mobile menggunakan Flutter agar dapat berjalan optimal di Android dan iOS. Peran ini menuntut kemampuan menerjemahkan kebutuhan pengguna ke dalam fitur yang intuitif, serta kolaborasi dengan tim untuk menghasilkan aplikasi yang responsif, aman, dan berkualitas.",
+      "logoUrl": "/experiences/indi.jpg",
+      "logoHint": "Indi logo"
+    }
+   
+  ]
+}
