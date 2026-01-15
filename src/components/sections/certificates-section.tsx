@@ -24,7 +24,7 @@ export function CertificatesSection() {
   return (
     <section id="certificates" className="scroll-mt-16">
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 flex items-center justify-center gap-3">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 flex items-center justify-center gap-3 leading-tight text-balance">
           <Award className="w-8 h-8 text-primary" />
           Sertifikasi Profesional
         </h2>

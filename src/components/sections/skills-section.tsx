@@ -8,7 +8,7 @@ export function SkillsSection() {
   return (
     <section id="skills" className="scroll-mt-16 w-full">
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 flex items-center justify-center gap-3">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 flex items-center justify-center gap-3 leading-tight text-balance">
           <Code className="w-8 h-8 text-primary" />
           Keahlian Teknis
         </h2>
