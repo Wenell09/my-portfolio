@@ -61,10 +61,18 @@ export function HeroSection() {
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
               {name}
             </h1>
-            <p className="mt-2 text-xl md:text-2xl text-primary font-medium min-h-[1.2em]">
-              <span>{displayedTitle}</span>
-              <span className="animate-typing-blink typing-cursor">|</span>
-            </p>
+           <p
+  className="
+    mt-2 text-xl md:text-2xl text-primary font-medium
+    h-[3.2rem] md:h-[2.4rem]
+    flex items-center
+    overflow-hidden
+  "
+>
+  <span>{displayedTitle}</span>
+  <span className="animate-typing-blink typing-cursor ml-1">|</span>
+</p>
+
             <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
               {description}
             </p>
