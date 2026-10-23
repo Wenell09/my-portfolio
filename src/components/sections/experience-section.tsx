@@ -17,7 +17,7 @@ export function ExperienceSection() {
       <div className="max-w-5xl mx-auto">
         <div className="space-y-8">
           <h3 className="text-lg font-semibold flex items-center gap-2">
-            <Briefcase /> Pengalaman Kerja
+            <Briefcase /> Pengalaman Profesional
           </h3>
           <div className="relative pl-6 after:absolute after:inset-y-0 after:left-6 after:w-px after:bg-border">
             {experiences.map((exp) => (
@@ -38,7 +38,7 @@ export function ExperienceSection() {
                   <CardHeader>
                     <CardTitle>{exp.role}</CardTitle>
                     <CardDescription className="flex justify-between items-baseline">
-                      <span>{exp.company}</span>
+                      <span>{exp.company} · {exp.category}</span>
                       <span className="text-xs font-mono">{exp.period}</span>
                     </CardDescription>
                   </CardHeader>

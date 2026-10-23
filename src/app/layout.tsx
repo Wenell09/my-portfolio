@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'Nabil Al Faatir | Portfolio',
-  description: 'Portofolio Profesional Nabil Al Faatir - Pengembang Full-Stack & Penggemar Desain',
+  description: 'Portofolio Profesional Nabil Al Faatir',
 };
 
 export default function RootLayout({
