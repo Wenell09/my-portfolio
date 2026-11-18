@@ -13,7 +13,7 @@ const navItems = [
   { name: 'Pengalaman', href: '#experience' },
 ];
 
-export function Navbar({ siteTitle }: { siteTitle?: string }) {
+export function Navbar({ siteTitle = 'MyPortfolio' }: { siteTitle?: string }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -24,8 +24,14 @@ export function Navbar({ siteTitle }: { siteTitle?: string }) {
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="#about" className="flex items-center gap-2 text-xl font-bold">
-            <span>{siteTitle || 'MyPortfolio'}</span>
+          <Link href="#about" className="flex items-center gap-2 text-xl font-bold tracking-tight hover:opacity-90 transition-opacity">
+            {siteTitle === 'MyPortfolio' ? (
+              <span>
+                My<span className="text-primary">Portfolio</span>
+              </span>
+            ) : (
+              <span>{siteTitle}</span>
+            )}
           </Link>
 
           {/* Desktop Navigation */}

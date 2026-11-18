@@ -112,7 +112,7 @@ export default async function Home() {
       <PagePreloader />
       <GridBackground />
       <div className="relative z-10 flex flex-col flex-1">
-        <Navbar siteTitle={settings?.siteTitle || profile?.name} />
+        <Navbar siteTitle="MyPortfolio" />
         <main className="flex-1">
           {profile && <HeroSection data={profile} />}
           <div className="space-y-12 md:space-y-24 px-4 md:px-8 py-12 md:py-24">
