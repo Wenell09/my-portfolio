@@ -32,21 +32,41 @@ model Profile {
   updatedAt       DateTime @updatedAt
 }
 
+enum ProjectCategory {
+  MOBILE
+  WEB
+  BACKEND
+  FULLSTACK
+  OTHER
+}
+
+enum ProjectStatus {
+  COMPLETED
+  IN_PROGRESS
+  ARCHIVED
+}
+
 model Project {
-  id           String   @id @default(cuid())
-  slug         String   @unique
+  id           String          @id @default(cuid())
+  slug         String          @unique
   title        String
-  description  String
-  imageUrl     String
+  description  String      
+  features     String[]        // Array untuk bullet points "Fitur Utama"
+  category     ProjectCategory @default(MOBILE)
+  tags         String[]        // Tech stack: ["Flutter", "Golang", "PostgreSQL"]
+  imageUrl     String          // Thumbnail utama
   imageHint    String?
-  tags         String[]
+  screenshots  String[]        // Array URL mockup tambahan untuk di halaman detail
   playstoreUrl String?
   githubUrl    String?
   demoUrl      String?
-  status       String   @default("published")
-  order        Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  status       ProjectStatus   @default(COMPLETED)
+  isPublished  Boolean         @default(true) // Memisahkan status proyek (Completed/WIP) dengan status tayang web
+  order        Int             @default(0)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([category, isPublished, order])
 }
 
 model SkillCategory {
@@ -108,19 +128,6 @@ model ContactMessage {
   createdAt DateTime @default(now())
 }
 
-model Education {
-  id          String   @id @default(cuid())
-  school      String
-  degree      String
-  field       String
-  period      String
-  description String
-  logoUrl     String
-  logoHint    String?
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
 
 model SocialLink {
   id        String   @id @default(cuid())

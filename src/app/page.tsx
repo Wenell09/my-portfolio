@@ -13,7 +13,6 @@ import { ProjectService } from '@/services/project';
 import { SkillCategoryService } from '@/services/skill';
 import { ExperienceService } from '@/services/experience';
 import { CertificateService } from '@/services/certificate';
-import { EducationService } from '@/services/education';
 import { SocialLinkService } from '@/services/social-link';
 import { SiteSettingService } from '@/services/settings';
 import type { Metadata } from 'next';
@@ -53,7 +52,6 @@ export default async function Home() {
   let skillCategories = [] as any[];
   let experiences = [] as any[];
   let certificates = [] as any[];
-  let education = [] as any[];
   let socialLinks = [] as any[];
   let settings: any = null;
   let footerText = `© ${new Date().getFullYear()} Portfolio`;
@@ -65,7 +63,6 @@ export default async function Home() {
       dbSkillCats,
       dbExperiences,
       dbCertificates,
-      dbEducation,
       dbSocialLinks,
       dbSettings,
     ] = await Promise.all([
@@ -74,7 +71,6 @@ export default async function Home() {
       SkillCategoryService.getAll().catch(() => []),
       ExperienceService.getAll(true).catch(() => []),
       CertificateService.getAll(true).catch(() => []),
-      EducationService.getAll().catch(() => []),
       SocialLinkService.getAll().catch(() => []),
       SiteSettingService.get().catch(() => null),
     ]);
@@ -84,7 +80,6 @@ export default async function Home() {
     skillCategories = dbSkillCats || [];
     experiences = dbExperiences || [];
     certificates = dbCertificates || [];
-    education = dbEducation || [];
     socialLinks = dbSocialLinks || [];
     if (dbSettings) {
       settings = dbSettings;
@@ -100,8 +95,7 @@ export default async function Home() {
     projects.length === 0 &&
     skillCategories.length === 0 &&
     experiences.length === 0 &&
-    certificates.length === 0 &&
-    education.length === 0;
+    certificates.length === 0;
 
   if (isAllDataEmpty) {
     return <UnderMaintenance />;
@@ -119,8 +113,8 @@ export default async function Home() {
             {skillCategories.length > 0 && <SkillsSection data={skillCategories} />}
             {projects.length > 0 && <ProjectsSection data={projects} />}
             {certificates.length > 0 && <CertificatesSection data={certificates} />}
-            {(experiences.length > 0 || education.length > 0) && (
-              <ExperienceSection data={experiences} education={education} />
+            {experiences.length > 0 && (
+              <ExperienceSection data={experiences} />
             )}
             <ContactSection data={profile} socialLinks={socialLinks} />
           </div>

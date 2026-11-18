@@ -5,7 +5,11 @@ import { ProjectService } from '@/services/project';
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
-    const project = await ProjectService.getById(params.id);
+    // Support both id and slug lookup
+    let project = await ProjectService.getById(params.id);
+    if (!project) {
+      project = await ProjectService.getBySlug(params.id);
+    }
     if (!project) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
@@ -26,6 +30,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     const project = await ProjectService.update(params.id, body);
 
     revalidatePath('/');
+    revalidatePath(`/projects/${params.id}`);
     return NextResponse.json(project);
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Failed to update project' }, { status: 400 });

@@ -1,17 +1,22 @@
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { StorageService } from './storage';
+import { ProjectCategory, ProjectStatus } from '@prisma/client';
 
 export const ProjectSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
+  features: z.array(z.string()).default([]),
+  category: z.nativeEnum(ProjectCategory).default(ProjectCategory.MOBILE),
   imageUrl: z.string().min(1, 'Image URL is required'),
   imageHint: z.string().optional().nullable(),
+  screenshots: z.array(z.string()).default([]),
   tags: z.array(z.string()).default([]),
   playstoreUrl: z.string().optional().nullable(),
   githubUrl: z.string().optional().nullable(),
   demoUrl: z.string().optional().nullable(),
-  status: z.enum(['draft', 'published']).default('published'),
+  status: z.nativeEnum(ProjectStatus).default(ProjectStatus.COMPLETED),
+  isPublished: z.boolean().default(true),
   order: z.number().int().default(0),
 });
 
@@ -19,7 +24,7 @@ export const ProjectUpdateSchema = ProjectSchema.partial();
 
 export class ProjectService {
   static async getAll(publishedOnly = false) {
-    const where = publishedOnly ? { status: 'published' } : {};
+    const where = publishedOnly ? { isPublished: true } : {};
     return await prisma.project.findMany({
       where,
       orderBy: { order: 'asc' },
@@ -59,7 +64,6 @@ export class ProjectService {
   static async update(id: string, raw: unknown) {
     const data = ProjectUpdateSchema.parse(raw);
 
-    // If updating image and replacing old blob
     const existing = await prisma.project.findUnique({ where: { id } });
     if (!existing) {
       throw new Error('Project not found');
@@ -79,6 +83,20 @@ export class ProjectService {
       }
     }
 
+    // Clean up removed screenshot blobs
+    if (data.screenshots && existing.screenshots) {
+      const removedScreenshots = existing.screenshots.filter(
+        (url) => !data.screenshots!.includes(url) && StorageService.isBlobUrl(url)
+      );
+      for (const url of removedScreenshots) {
+        try {
+          await StorageService.delete(url);
+        } catch (e) {
+          console.warn('Failed to delete old screenshot from blob:', e);
+        }
+      }
+    }
+
     return updated;
   }
 
@@ -90,11 +108,23 @@ export class ProjectService {
 
     const deleted = await prisma.project.delete({ where: { id } });
 
+    // Delete main image
     if (StorageService.isBlobUrl(existing.imageUrl)) {
       try {
         await StorageService.delete(existing.imageUrl);
       } catch (e) {
         console.warn('Failed to delete project image from blob:', e);
+      }
+    }
+
+    // Delete screenshots
+    for (const url of existing.screenshots) {
+      if (StorageService.isBlobUrl(url)) {
+        try {
+          await StorageService.delete(url);
+        } catch (e) {
+          console.warn('Failed to delete screenshot from blob:', e);
+        }
       }
     }
 

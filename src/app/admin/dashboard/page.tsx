@@ -181,10 +181,10 @@ export default async function AdminDashboardPage() {
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-sm">{p.title}</span>
                         <Badge
-                          variant={p.status === 'published' ? 'secondary' : 'outline'}
+                          variant={p.status === 'COMPLETED' ? 'default' : p.status === 'IN_PROGRESS' ? 'secondary' : 'outline'}
                           className="text-[10px] px-1.5 py-0 h-4"
                         >
-                          {p.status}
+                          {p.status === 'COMPLETED' ? 'Completed' : p.status === 'IN_PROGRESS' ? 'In Progress' : p.status}
                         </Badge>
                       </div>
                       <div className="flex flex-wrap gap-1">

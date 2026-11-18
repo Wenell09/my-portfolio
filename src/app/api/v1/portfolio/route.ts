@@ -4,7 +4,6 @@ import { ProjectService } from '@/services/project';
 import { SkillCategoryService } from '@/services/skill';
 import { ExperienceService } from '@/services/experience';
 import { CertificateService } from '@/services/certificate';
-import { EducationService } from '@/services/education';
 import { SocialLinkService } from '@/services/social-link';
 import { SiteSettingService } from '@/services/settings';
 
@@ -19,7 +18,6 @@ export async function GET() {
       dbSkills,
       dbExperiences,
       dbCertificates,
-      dbEducation,
       dbSocialLinks,
       dbSettings,
     ] = await Promise.all([
@@ -28,7 +26,6 @@ export async function GET() {
       SkillCategoryService.getAll().catch(() => []),
       ExperienceService.getAll(true).catch(() => []),
       CertificateService.getAll(true).catch(() => []),
-      EducationService.getAll().catch(() => []),
       SocialLinkService.getAll().catch(() => []),
       SiteSettingService.get().catch(() => null),
     ]);
@@ -48,7 +45,6 @@ export async function GET() {
         skills: dbSkills || [],
         experiences: dbExperiences || [],
         certificates: dbCertificates || [],
-        education: dbEducation || [],
         socialLinks: dbSocialLinks || [],
         settings: dbSettings || null,
       },

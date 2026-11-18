@@ -8,23 +8,6 @@ ALTER TABLE "Experience" ADD COLUMN IF NOT EXISTS "status" TEXT NOT NULL DEFAULT
 ALTER TABLE "Certificate" ADD COLUMN IF NOT EXISTS "status" TEXT NOT NULL DEFAULT 'published';
 
 -- CreateTable
-CREATE TABLE IF NOT EXISTS "Education" (
-    "id" TEXT NOT NULL,
-    "school" TEXT NOT NULL,
-    "degree" TEXT NOT NULL,
-    "field" TEXT NOT NULL,
-    "period" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "logoUrl" TEXT NOT NULL,
-    "logoHint" TEXT,
-    "order" INTEGER NOT NULL DEFAULT 0,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Education_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE IF NOT EXISTS "SocialLink" (
     "id" TEXT NOT NULL,
     "platform" TEXT NOT NULL,
