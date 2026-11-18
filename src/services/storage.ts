@@ -29,7 +29,11 @@ export class StorageService {
   static async upload(file: File, folder: string = 'uploads') {
     this.validate(file);
 
-    const ext = file.name.split('.').pop() || 'bin';
+    let ext = file.name.split('.').pop()?.toLowerCase() || 'bin';
+    if (file.type === 'image/webp' && ext !== 'webp') {
+      ext = 'webp';
+    }
+
     const cleanName = file.name
       .replace(/\.[^/.]+$/, '')
       .toLowerCase()
@@ -39,6 +43,7 @@ export class StorageService {
     const blob = await put(pathname, file, {
       access: 'public',
       addRandomSuffix: true,
+      contentType: file.type || undefined,
       token: process.env.BLOB_READ_WRITE_TOKEN,
     });
 

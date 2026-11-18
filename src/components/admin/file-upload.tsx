@@ -3,8 +3,13 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { UploadCloud, CheckCircle2, AlertCircle, X, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { UploadCloud, CheckCircle2, AlertCircle, X, Image as ImageIcon, Loader2, Sparkles } from 'lucide-react';
 import Image from 'next/image';
+import {
+  compressImageToWebP,
+  shouldCompressImage,
+  formatFileSize,
+} from '@/lib/image-compression';
 
 interface FileUploadProps {
   onSuccess: (url: string) => void;
@@ -13,6 +18,14 @@ interface FileUploadProps {
   folder?: string;
   accept?: string;
   label?: string;
+  /** Maximum target file size in MB. Default: 1 */
+  maxSizeMB?: number;
+  /** Maximum dimension (width/height) to preserve crisp detail without excessive resolution. Default: 2048 */
+  maxWidthOrHeight?: number;
+  /** Compression initial quality (0 to 1). Default: 0.88 */
+  initialQuality?: number;
+  /** Disable automatic client-side compression to WebP */
+  disableCompression?: boolean;
 }
 
 export function FileUpload({
@@ -22,8 +35,14 @@ export function FileUpload({
   folder = 'uploads',
   accept = 'image/*',
   label = 'Upload File',
+  maxSizeMB = 1,
+  maxWidthOrHeight = 2048,
+  initialQuality = 0.88,
+  disableCompression = false,
 }: FileUploadProps) {
   const [loading, setLoading] = useState(false);
+  const [statusText, setStatusText] = useState('');
+  const [compressionInfo, setCompressionInfo] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentUrl || null);
@@ -33,12 +52,37 @@ export function FileUpload({
     if (!file) return;
 
     setLoading(true);
+    setStatusText('Memproses file...');
     setError('');
     setSuccess(false);
+    setCompressionInfo(null);
 
     try {
+      let uploadFile: File = file;
+
+      // Compress and convert to WebP if the file is a raster image
+      if (!disableCompression && shouldCompressImage(file)) {
+        setStatusText('Mengompres ke WebP...');
+        const result = await compressImageToWebP(file, {
+          maxSizeMB,
+          maxWidthOrHeight,
+          initialQuality,
+          useWebWorker: true,
+        });
+
+        uploadFile = result.file;
+
+        if (result.compressionRatio > 0) {
+          setCompressionInfo(
+            `${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)} (-${result.compressionRatio}%)`
+          );
+        }
+      }
+
+      setStatusText('Mengunggah ke storage...');
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', uploadFile);
       formData.append('folder', folder);
       if (previewUrl && previewUrl.includes('.blob.vercel-storage.com')) {
         formData.append('replaceUrl', previewUrl);
@@ -58,28 +102,34 @@ export function FileUpload({
       onSuccess(data.url);
       setSuccess(true);
     } catch (err: any) {
+      console.error('Upload error:', err);
       setError(err.message || 'Gagal mengupload file');
     } finally {
       setLoading(false);
+      setStatusText('');
+      // Reset input value so re-selecting same file triggers onChange
+      e.target.value = '';
     }
   };
 
   const handleClear = () => {
     setPreviewUrl(null);
     setSuccess(false);
+    setCompressionInfo(null);
     if (onRemove) onRemove();
   };
 
-  const isImage = previewUrl && (
-    previewUrl.startsWith('data:image') ||
-    previewUrl.startsWith('/') ||
-    previewUrl.includes('.png') ||
-    previewUrl.includes('.jpg') ||
-    previewUrl.includes('.jpeg') ||
-    previewUrl.includes('.webp') ||
-    previewUrl.includes('.svg') ||
-    previewUrl.includes('blob.vercel-storage.com')
-  );
+  const isPdf =
+    previewUrl &&
+    (previewUrl.toLowerCase().endsWith('.pdf') || previewUrl.toLowerCase().includes('.pdf?'));
+
+  const isImage =
+    previewUrl &&
+    !isPdf &&
+    (previewUrl.startsWith('data:image') ||
+      previewUrl.startsWith('/') ||
+      /\.(png|jpe?g|webp|svg|gif|avif)($|\?)/i.test(previewUrl) ||
+      previewUrl.includes('blob.vercel-storage.com'));
 
   return (
     <div className="space-y-3">
@@ -99,19 +149,32 @@ export function FileUpload({
               ) : (
                 <UploadCloud className="w-4 h-4" />
               )}
-              {loading ? 'Uploading...' : label}
+              {loading ? statusText || 'Mengupload...' : label}
             </span>
           </Button>
         </label>
 
         {previewUrl && onRemove && (
-          <Button type="button" variant="ghost" size="sm" onClick={handleClear} className="text-muted-foreground hover:text-destructive h-8 px-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={handleClear}
+            className="text-muted-foreground hover:text-destructive h-8 px-2"
+          >
             <X className="w-4 h-4 mr-1" /> Hapus
           </Button>
         )}
 
         {success && <CheckCircle2 className="w-4 h-4 text-green-500" />}
         {error && <AlertCircle className="w-4 h-4 text-destructive" />}
+
+        {compressionInfo && (
+          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">
+            <Sparkles className="w-3 h-3" />
+            WebP {compressionInfo}
+          </span>
+        )}
       </div>
 
       {previewUrl && (
