@@ -1,9 +1,9 @@
-import skillsData from '@/lib/skills-data.json';
 import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards';
 import { Code } from 'lucide-react';
 
-export function SkillsSection() {
-  const allSkills = skillsData.categories.flatMap((category) => category.skills);
+export function SkillsSection({ data = [] }: { data?: any[] }) {
+  const allSkills = (data || []).flatMap((category) => category?.skills || []);
+  if (!allSkills || allSkills.length === 0) return null;
 
   return (
     <section id="skills" className="scroll-mt-16 w-full">

@@ -2,10 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import profileData from '@/lib/profile-data.json';
+interface HeroData {
+  name?: string;
+  title?: string;
+  description?: string;
+  profileImageUrl?: string;
+  imageHint?: string | null;
+}
 
-export function HeroSection() {
-  const { name, title, description, profileImageUrl, imageHint } = profileData;
+export function HeroSection({ data }: { data?: HeroData }) {
+  const name = data?.name || 'Portfolio';
+  const title = data?.title || 'Developer';
+  const description = data?.description || '';
+  const profileImageUrl = data?.profileImageUrl || '/favicon.jpeg';
+  const imageHint = data?.imageHint || null;
   const [displayedTitle, setDisplayedTitle] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);

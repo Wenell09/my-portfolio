@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import profileData from '@/lib/profile-data.json';
 
 const navItems = [
   { name: 'Tentang', href: '#about' },
@@ -14,7 +13,7 @@ const navItems = [
   { name: 'Pengalaman', href: '#experience' },
 ];
 
-export function Navbar() {
+export function Navbar({ siteTitle }: { siteTitle?: string }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -26,7 +25,7 @@ export function Navbar() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="#about" className="flex items-center gap-2 text-xl font-bold">
-            <span>MyPortfolio</span>
+            <span>{siteTitle || 'MyPortfolio'}</span>
           </Link>
 
           {/* Desktop Navigation */}

@@ -1,7 +1,10 @@
 'use client';
+
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Mail, Linkedin, Github, Mails } from 'lucide-react';
-import profileData from '@/lib/profile-data.json';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Mail, Linkedin, Github, Mails, Send, CheckCircle2, Globe, ExternalLink, Phone } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const WhatsappIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -41,51 +44,133 @@ const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export function ContactSection() {
-  const { contact } = profileData;
+export interface SocialLinkItem {
+  id?: string;
+  platform: string;
+  url: string;
+  icon?: string;
+}
 
-  const socialLinks = [
-    {
-      icon: <Mail className="h-6 w-6" />,
-      title: 'Email',
-      href: `mailto:${contact.email}`,
-    },
-    {
-      icon: <Linkedin className="h-6 w-6" />,
-      title: 'LinkedIn',
-      href: contact.linkedin,
-    },
-    {
-      icon: <Github className="h-6 w-6" />,
-      title: 'GitHub',
-      href: contact.github,
-    },
-    {
-      icon: <InstagramIcon className="h-6 w-6" />,
-      title: 'Instagram',
-      href: contact.instagram,
-    },
-    {
-      icon: <WhatsappIcon className="h-6 w-6" />,
-      title: 'WhatsApp',
-      href: `https://wa.me/${contact.whatsapp.replace(/\D/g, '')}`,
-    },
-  ];
+interface ContactData {
+  email?: string | null;
+  linkedin?: string | null;
+  github?: string | null;
+  instagram?: string | null;
+  whatsapp?: string | null;
+  contact?: {
+    email?: string;
+    linkedin?: string;
+    github?: string;
+    instagram?: string;
+    whatsapp?: string;
+  };
+}
+
+export function ContactSection({
+  data,
+  socialLinks = [],
+}: {
+  data?: ContactData;
+  socialLinks?: SocialLinkItem[];
+}) {
+  const email = data?.email || data?.contact?.email || null;
+  const linkedin = data?.linkedin || data?.contact?.linkedin || null;
+  const github = data?.github || data?.contact?.github || null;
+  const instagram = data?.instagram || data?.contact?.instagram || null;
+  const rawWhatsapp = data?.whatsapp || data?.contact?.whatsapp || null;
+  const whatsappNumber = rawWhatsapp ? rawWhatsapp.replace(/\D/g, '') : '';
+
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        setSent(true);
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        const result = await res.json();
+        setError(result.error || 'Gagal mengirim pesan');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Terjadi kesalahan');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getSocialIcon = (platform: string, iconName?: string) => {
+    const key = (platform + ' ' + (iconName || '')).toLowerCase();
+    if (key.includes('github')) return <Github className="h-6 w-6" />;
+    if (key.includes('linkedin')) return <Linkedin className="h-6 w-6" />;
+    if (key.includes('instagram')) return <InstagramIcon className="h-6 w-6" />;
+    if (key.includes('whatsapp') || key.includes('phone')) return <WhatsappIcon className="h-6 w-6" />;
+    if (key.includes('mail') || key.includes('email')) return <Mail className="h-6 w-6" />;
+    return <Globe className="h-6 w-6" />;
+  };
+
+  const activeLinks = socialLinks && socialLinks.length > 0
+    ? socialLinks.map((item) => ({
+        icon: getSocialIcon(item.platform, item.icon),
+        title: item.platform,
+        href: item.url,
+      }))
+    : [
+        email ? {
+          icon: <Mail className="h-6 w-6" />,
+          title: 'Email',
+          href: `mailto:${email}`,
+        } : null,
+        linkedin ? {
+          icon: <Linkedin className="h-6 w-6" />,
+          title: 'LinkedIn',
+          href: linkedin,
+        } : null,
+        github ? {
+          icon: <Github className="h-6 w-6" />,
+          title: 'GitHub',
+          href: github,
+        } : null,
+        instagram ? {
+          icon: <InstagramIcon className="h-6 w-6" />,
+          title: 'Instagram',
+          href: instagram,
+        } : null,
+        whatsappNumber ? {
+          icon: <WhatsappIcon className="h-6 w-6" />,
+          title: 'WhatsApp',
+          href: `https://wa.me/${whatsappNumber}`,
+        } : null,
+      ].filter(Boolean) as { icon: React.ReactNode; title: string; href: string }[];
 
   return (
     <section id="contact" className="scroll-mt-16">
-      <div className="max-w-5xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 flex items-center justify-center gap-3 leading-tight text-balance">
-          <Mails className="w-8 h-8 text-primary" />
-          Hubungi Saya
-        </h2>
-        <p className="max-w-2xl mx-auto text-lg text-muted-foreground mb-12">
-          Saya selalu terbuka untuk diskusi, kolaborasi, atau sekadar menyapa. Jangan ragu untuk menghubungi saya melalui salah satu platform di bawah ini.
-        </p>
+      <div className="max-w-3xl mx-auto text-center space-y-8">
+        <div>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 flex items-center justify-center gap-3 leading-tight">
+            <Mails className="w-8 h-8 text-primary" />
+            Hubungi Saya
+          </h2>
+          <p className="text-muted-foreground">
+            Saya selalu terbuka untuk diskusi, kolaborasi, atau sekadar menyapa.
+          </p>
+        </div>
 
-        <div className="flex justify-center items-center gap-4 md:gap-8">
+        <div className="flex justify-center items-center gap-4 md:gap-8 mb-8">
           <TooltipProvider>
-            {socialLinks.map((link) => (
+            {activeLinks.map((link) => (
               <Tooltip key={link.title}>
                 <TooltipTrigger asChild>
                   <a
@@ -106,6 +191,45 @@ export function ContactSection() {
             ))}
           </TooltipProvider>
         </div>
+
+        <form onSubmit={handleSubmit} className="text-left space-y-4 bg-card/50 p-6 rounded-xl border border-border">
+          <h3 className="font-semibold text-lg text-foreground">Kirim Pesan Langsung</h3>
+          {sent && (
+            <div className="flex items-center gap-2 p-3 text-sm text-green-500 bg-green-500/10 border border-green-500/20 rounded-md">
+              <CheckCircle2 className="w-4 h-4" /> Pesan berhasil terkirim! Terima kasih.
+            </div>
+          )}
+          {error && (
+            <div className="p-3 text-sm text-destructive-foreground bg-destructive/10 border border-destructive/20 rounded-md">
+              {error}
+            </div>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              placeholder="Nama Lengkap"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              required
+            />
+            <Input
+              type="email"
+              placeholder="Alamat Email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              required
+            />
+          </div>
+          <Textarea
+            placeholder="Tulis pesan Anda di sini..."
+            rows={4}
+            value={formData.message}
+            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+            required
+          />
+          <Button type="submit" disabled={loading} className="w-full flex items-center gap-2">
+            <Send className="w-4 h-4" /> {loading ? 'Mengirim...' : 'Kirim Pesan'}
+          </Button>
+        </form>
       </div>
     </section>
   );

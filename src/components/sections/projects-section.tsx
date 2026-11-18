@@ -11,8 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Github, Lightbulb, Play } from 'lucide-react';
-import projectsData from '@/lib/projects-data.json';
+import { Github, Lightbulb, Play, ExternalLink } from 'lucide-react';
 import {
   Carousel,
   CarouselContent,
@@ -20,9 +19,21 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  imageHint?: string | null;
+  tags: string[];
+  playstoreUrl?: string | null;
+  githubUrl?: string | null;
+  demoUrl?: string | null;
+}
 
-export function ProjectsSection() {
-  const { projects } = projectsData;
+export function ProjectsSection({ data = [] }: { data?: Project[] }) {
+  const projects = data;
+  if (!projects || projects.length === 0) return null;
 
   return (
     <section id="projects" className="scroll-mt-16">
@@ -69,13 +80,13 @@ export function ProjectsSection() {
 </Badge>
                       ))}
                     </CardContent>
-           <CardFooter className="pt-4 mt-auto flex gap-2">
+           <CardFooter className="pt-4 mt-auto flex flex-wrap gap-2">
   {project.playstoreUrl && (
     <a
       href={project.playstoreUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="w-full"
+      className="flex-1 min-w-[120px]"
     >
       <Button
         variant="outline"
@@ -87,12 +98,29 @@ export function ProjectsSection() {
     </a>
   )}
 
+  {project.demoUrl && (
+    <a
+      href={project.demoUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex-1 min-w-[120px]"
+    >
+      <Button
+        variant="outline"
+        className="w-full h-10 flex items-center justify-center gap-2"
+      >
+        <ExternalLink className="h-4 w-4" />
+        Live Demo
+      </Button>
+    </a>
+  )}
+
   {project.githubUrl && (
     <a
       href={project.githubUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="w-full"
+      className="flex-1 min-w-[120px]"
     >
       <Button
         variant="outline"
