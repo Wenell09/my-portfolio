@@ -8,6 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { GridBackground } from '@/components/ui/grid-background';
 import {
+  ProjectGalleryProvider,
+  ProjectCoverImage,
+  ProjectScreenshotsGallery,
+} from '@/components/projects/project-image-gallery';
+import {
   Github,
   Play,
   ExternalLink,
@@ -92,138 +97,122 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             </Button>
           </div>
 
-          {/* Hero Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-12">
-            {/* Cover Image */}
-            <div className="lg:col-span-3 order-1">
-              <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-2xl shadow-primary/10 border border-border/50">
-                <Image
+          <ProjectGalleryProvider
+            title={project.title}
+            coverImage={project.imageUrl}
+            coverHint={project.imageHint}
+            screenshots={project.screenshots}
+          >
+            {/* Hero Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-12">
+              {/* Cover Image */}
+              <div className="lg:col-span-3 order-1">
+                <ProjectCoverImage
                   src={project.imageUrl}
                   alt={project.title}
-                  fill
+                  hint={project.imageHint}
                   priority
-                  style={{ objectFit: 'cover' }}
-                  sizes="(max-width: 1024px) 100vw, 60vw"
-                  data-ai-hint={project.imageHint ?? undefined}
                 />
               </div>
-            </div>
 
-            {/* Project Info */}
-            <div className="lg:col-span-2 order-2 flex flex-col justify-center space-y-5">
-              {/* Category + Status */}
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary" className="gap-1.5">
-                  <Layers className="w-3 h-3" />
-                  {categoryLabel}
-                </Badge>
-                <Badge variant={statusConfig.variant} className="gap-1.5">
-                  <StatusIcon className="w-3 h-3" />
-                  {statusConfig.label}
-                </Badge>
-              </div>
-
-              {/* Title */}
-              <h1 className="text-3xl md:text-4xl font-bold leading-tight">{project.title}</h1>
-
-              {/* Description */}
-              <p className="text-muted-foreground leading-relaxed">{project.description}</p>
-
-              {/* Action Buttons */}
-              {hasLinks && (
-                <div className="flex flex-wrap gap-3 pt-2">
-                  {project.demoUrl && (
-                    <Button className="gap-2" asChild>
-                      <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="w-4 h-4" />
-                        Live Demo
-                      </a>
-                    </Button>
-                  )}
-                  {project.playstoreUrl && (
-                    <Button variant="outline" className="gap-2" asChild>
-                      <a href={project.playstoreUrl} target="_blank" rel="noopener noreferrer">
-                        <Play className="w-4 h-4" />
-                        Play Store
-                      </a>
-                    </Button>
-                  )}
-                  {project.githubUrl && (
-                    <Button variant="outline" className="gap-2" asChild>
-                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                        <Github className="w-4 h-4" />
-                        Source Code
-                      </a>
-                    </Button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Tech Stack */}
-          {project.tags.length > 0 && (
-            <div className="mb-10">
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Tag className="w-5 h-5 text-primary" />
-                Tech Stack
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {project.tags.map((tag) => (
-                  <Badge key={tag} variant="outline" className="text-sm px-3 py-1">
-                    {tag}
+              {/* Project Info */}
+              <div className="lg:col-span-2 order-2 flex flex-col justify-center space-y-5">
+                {/* Category + Status */}
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary" className="gap-1.5">
+                    <Layers className="w-3 h-3" />
+                    {categoryLabel}
                   </Badge>
-                ))}
-              </div>
-            </div>
-          )}
+                  <Badge variant={statusConfig.variant} className="gap-1.5">
+                    <StatusIcon className="w-3 h-3" />
+                    {statusConfig.label}
+                  </Badge>
+                </div>
 
-          <Separator className="mb-10" />
+                {/* Title */}
+                <h1 className="text-3xl md:text-4xl font-bold leading-tight">{project.title}</h1>
 
-          {/* Features */}
-          {project.features.length > 0 && (
-            <div className="mb-12">
-              <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                <Star className="w-6 h-6 text-primary" />
-                Fitur Utama
-              </h2>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {project.features.map((feature, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-3 p-4 rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/40 transition-colors"
-                  >
-                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                    <span className="text-sm leading-relaxed">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+                {/* Description */}
+                <p className="text-muted-foreground leading-relaxed">{project.description}</p>
 
-          {/* Screenshots Gallery */}
-          {project.screenshots.length > 0 && (
-            <div className="mb-12">
-              <h2 className="text-2xl font-bold mb-6">Screenshots</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {project.screenshots.map((url, i) => (
-                  <div
-                    key={i}
-                    className="relative aspect-video rounded-lg overflow-hidden border border-border/50 shadow-md hover:shadow-lg hover:shadow-primary/10 transition-shadow group"
-                  >
-                    <Image
-                      src={url}
-                      alt={`${project.title} screenshot ${i + 1}`}
-                      fill
-                      style={{ objectFit: 'cover' }}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="group-hover:scale-105 transition-transform duration-300"
-                    />
+                {/* Action Buttons */}
+                {hasLinks && (
+                  <div className="flex flex-wrap gap-3 pt-2">
+                    {project.demoUrl && (
+                      <Button className="gap-2" asChild>
+                        <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="w-4 h-4" />
+                          Live Demo
+                        </a>
+                      </Button>
+                    )}
+                    {project.playstoreUrl && (
+                      <Button variant="outline" className="gap-2" asChild>
+                        <a href={project.playstoreUrl} target="_blank" rel="noopener noreferrer">
+                          <Play className="w-4 h-4" />
+                          Play Store
+                        </a>
+                      </Button>
+                    )}
+                    {project.githubUrl && (
+                      <Button variant="outline" className="gap-2" asChild>
+                        <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                          <Github className="w-4 h-4" />
+                          Source Code
+                        </a>
+                      </Button>
+                    )}
                   </div>
-                ))}
+                )}
               </div>
             </div>
-          )}
+
+            {/* Tech Stack */}
+            {project.tags.length > 0 && (
+              <div className="mb-10">
+                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Tag className="w-5 h-5 text-primary" />
+                  Tech Stack
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <Badge key={tag} variant="outline" className="text-sm px-3 py-1">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <Separator className="mb-10" />
+
+            {/* Features */}
+            {project.features.length > 0 && (
+              <div className="mb-12">
+                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                  <Star className="w-6 h-6 text-primary" />
+                  Fitur Utama
+                </h2>
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {project.features.map((feature, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-3 p-4 rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/40 transition-colors"
+                    >
+                      <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                      <span className="text-sm leading-relaxed">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Screenshots Gallery */}
+            <ProjectScreenshotsGallery
+              title={project.title}
+              screenshots={project.screenshots}
+            />
+          </ProjectGalleryProvider>
 
           {/* Bottom CTA */}
           {hasLinks && (
